@@ -3,13 +3,30 @@
 	var table = $('.table');
 	var tmp_storage = [];
 
+	// table.delegate('td', 'dblclick', function () {
+	// 	var _self = $(this);
+	// 	console.log('dbl click');
+	// 	table.find('td').attr('contenteditable', 'false');
+	// 	_self.attr('contenteditable', 'true');
+	// });
+
+
+	$('.table').bind('click', function (e) {
+		e.stopPropagation();
+	});
+
+	$(document).bind('click', function () {
+		console.log('do something');
+		cancelSelected('모든 선택 해제!');
+	});
+
+
 	/**
 	 * 테이블의 셀선택 이벤트 관련
 	 */
 	table.delegate('td', 'click', function () {
 		var _self = $(this);
 		
-
 		if(_self.hasClass('selected')){
 			_self.removeClass('selected');
 			// TODO 동일한 것을 다시 선택할 경우 해당 배열을 제거해야 한다.
@@ -188,6 +205,29 @@
 		console.log(msg);
 	}
 
+	/**
+	 * 선택된 영역에 메모를 추가한다.
+	 * @param {*} msg 
+	 */
+	function insertMemo(msg){
+		// 하나의 선택영역에서만 메모가 가능하다
+		// 복수의 선택영역이 있을 경우 선택 영역을 모두 해제한다.
+		// 선택된 영역을 contenteditable="true"로 변환한다.
+		// blur 이벤트가 일어나거나 메모종료 버튼을 누를 경우 수정 모드가 종료되는 것으로 설정할 수 있겠다. 
+
+		table.find('td').attr('contenteditable', 'false');
+		table.find('.selected').attr('contenteditable', 'true').focus();
+
+		table.find('.selected').blur(function () {
+			console.log('blur');
+			table.find('td').attr('contenteditable', 'false');
+			table.find('td').removeClass('selected');
+		});
+
+		console.log(msg);
+	}
+
+
 	$('.js-btn-merge').bind('click', function () {
 		mergeSelected('병합되었습니다.');
 	});
@@ -199,9 +239,35 @@
 	$('.js-btn-redo-merge').bind('click', function () {
 		// 선택영역이 있는지 확인하고 
 		// 두개 이상 선택된 셀이 있다면 모두 선택 해제 한다.
+		if(table.find('.selected').length>1){
+			cancelSelected('병합취소는 하나의 선택영역에서만 가능합니다.');
+			return;
+		}
+
+		if(!table.find('.selected').attr('rowspan')){
+			cancelSelected('선택한 영역은 병합된 셀이 아닙니다.');
+			return;
+		}
+
+		if(table.find('.selected').attr('rowspan') <= 1){
+			cancelSelected('선택한 영역은 병합된 셀이 아닙니다.');
+			return;
+		}
+
+		console.log( table.find('.selected').attr('rowspan') );
 
 		restoreCell('병합된 셀이 분리되었습니다.');
 	});
 
+
+	$('.js-btn-write').bind('click', function () {
+		if(table.find('.selected').length<1){
+			console.log('메모할 셀을 선택해주세요.');
+			return;
+		}
+
+		insertMemo('쓰기 모드');
+	});
+	
 
 //}(jQuery));
