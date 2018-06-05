@@ -86,22 +86,6 @@
 		}
 		
 
-		// TODO 병합된 셀을 선택 후에 바로 위의 칼럼을 선택할 경우 문제가 된다.
-		
-		// if(Math.abs(tmp_storage[tmp_storage.length-2].r - row) > 1){
-		// 	cancelSelected('연속된 영역을 선택해야 합니다.');	
-		// 	return;
-		// } 
-
-		// 중간에 건너띄어서 셀이 선택이 되지 않아야 한다.
-		// 선택영역간에 rowspan이라는 것이 있고 그걸 통해서 계산한 결과 연속된 지점이라도 판단이 된다면 ok
-		// 만약 연속된 구간이 아니라고 판단이 되면 모두 선택 해제
-		// 그럼 연속된 구간이라는 것을 어떻게 판단을 할 수가 있을 것인가???
-
-		
-		
-		// 순서대로 정렬을 한 후에 중간에 순서가 빠져 있는지 확인하고 순서가 빠진 경우 전체 선택을 해제하고 배열을 비운다.
-		// 그럼 일단 r만 따로 배열에 정리하여 넣은 뒤에 sort()로 정렬하고 순차적으로 이동하면서 빈 구석이 있는지 확인한다.
 		var tmp_single_row = [];
 		for(var i=0,size=tmp_storage.length;i<size;i++){
 			tmp_single_row.push(tmp_storage[i].r);
@@ -146,7 +130,15 @@
 	 * @param {*} msg 
 	 */
 	function restoreCell(msg){
+		// 배열에 저장된 위치의 각 셀에서 rowspan과 blind class를 모두 제거한다.
+		for(var i=0,size=tmp_storage.length;i<size;i++){
+			console.log('c : ' + tmp_storage[i].c + ' / r : ' + tmp_storage[i].r);
+			table.find('tr').eq(tmp_storage[i].r).children('td').eq(tmp_storage[i].c).attr({'rowspan' :  '1'}).removeClass('blind');
+		}
 
+		cancelSelected('병합된 셀을 해제 후 선택 해제');
+
+		console.log(msg);
 	}
 
 	/**
@@ -202,6 +194,13 @@
 
 	$('.js-btn-cancel').bind('click', function () {
 		cancelSelected('선택영역이 취소되었습니다.');
+	});
+
+	$('.js-btn-redo-merge').bind('click', function () {
+		// 선택영역이 있는지 확인하고 
+		// 두개 이상 선택된 셀이 있다면 모두 선택 해제 한다.
+
+		restoreCell('병합된 셀이 분리되었습니다.');
 	});
 
 
