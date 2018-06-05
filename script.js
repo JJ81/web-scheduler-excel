@@ -1,4 +1,4 @@
-// (function ($) {
+(function ($, document, window) {
 	
 	var table = $('.table');
 	var tmp_storage = [];
@@ -16,7 +16,7 @@
 	});
 
 	$(document).bind('click', function () {
-		console.log('do something');
+		// console.log('do something');
 		cancelSelected('모든 선택 해제!');
 	});
 
@@ -270,4 +270,4 @@
 	});
 	
 
-//}(jQuery));
+}(jQuery, document, window));
