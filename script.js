@@ -2,6 +2,10 @@
 	
 	var table = $('.table');
 	var tmp_storage = [];
+
+	/**
+	 * 테이블의 셀선택 이벤트 관련
+	 */
 	table.delegate('td', 'click', function () {
 		var _self = $(this);
 		
@@ -116,7 +120,7 @@
 
 			if(Math.abs(tmp_single_row[i] - tmp_selected_value) > 1){
 				console.log('순차적이지 않으므로 모두 해제!!');
-				cancelSelected('선택된 영역이 잘못되었습니다.');
+				 cancelSelected('선택된 영역이 잘못되었습니다.');
 				return;
 			}
 			tmp_selected_value = tmp_single_row[i];
@@ -127,13 +131,28 @@
 
 	});
 
+	/**
+	 * 선택된 영역을 해제
+	 * @param {*} msg 
+	 */
 	function cancelSelected(msg){
 		table.find('td').removeClass('selected');
 		tmp_storage = [];
 		console.log(msg);
 	}
 
+	/**
+	 * 기본에 이미 병합된 셀을 다시 분리
+	 * @param {*} msg 
+	 */
+	function restoreCell(msg){
 
+	}
+
+	/**
+	 * 선택된 셀을 병합
+	 * @param {*} msg 
+	 */
 	function mergeSelected(msg){
 		if(tmp_storage.length <= 1){
 			alert('병합할 영역을 하나 이상 선택하세요.');
