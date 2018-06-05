@@ -1,0 +1,29 @@
+.table td{
+	border: 1px solid #f00;
+	text-align: center;
+	cursor: pointer;
+}
+
+.selected{
+	background: #ff0;
+}
+
+.blind{
+	display: none;
+}
+
+.center{
+	text-align: center;
+}
+
+.table-header{
+	margin-bottom: 0;
+
+}
+
+.table-header th{
+	border-top: 0;
+	text-align: center;
+	background: #efefef;
+	color: #666;
+}
